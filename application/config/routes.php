@@ -2,6 +2,8 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 // To view counties
 $route['counties'] = 'counties/index';
+// To view login
+$route['login'] = 'users/index';
 //To go to Home Page
 $route['default_controller'] = 'pages/view';
 // To pass static pages without adding the whole path on URL
