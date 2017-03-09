@@ -87,14 +87,32 @@ class Users extends CI_Controller{
 		else{
 
 			//Generate random key
-			$key = md5(uniqueid());
+			$key = md5(uniqid());
 
 			// Create email message to new user
-			$this->load->library('email');
+			$this->load->library('email', array('mailtype'=> 'html') );
 
+			$this->email->from('kcpereg@edu.co.ke',"KCPE-SCHOOL-SELECTION");
+			$this->email->to($this->input->post('email'));
+			$this->email->subject("CONFIRM YOUR REGISTRATION.");
+
+			// Attack random key to message
+			$message = "<p>Thank you for Signing up</p>";
+			$message = "<p><a href='".base_url()."Users/register_user/$key'>Click here</a> to confirm your account</p>";
+
+			$this->email->message($message);
+
+			if($this->email->send(FALSE)){
+				echo "Failed.";
+			}
+
+			else{
+				echo "Email has been sent.";
+			}
 		}
 	}
 
+	//Call-back function called in login_validation function to compare email/username entered with one saved in db
 	public function validate_credentials(){
 		$this->load->model('model_users');
 
@@ -110,7 +128,7 @@ class Users extends CI_Controller{
 
 
 	public function members(){
-
+		// Checks if user session is created; if not it redirects to restricted page
 		if($this->session->userdata('is_logged_in') == FALSE){
 			redirect('Users/restricted');
 		}
@@ -126,6 +144,7 @@ class Users extends CI_Controller{
 
 	}
 
+	//function called when user session is not created
 	public function restricted(){
 		$this->load->view('users/restricted');
 	}
